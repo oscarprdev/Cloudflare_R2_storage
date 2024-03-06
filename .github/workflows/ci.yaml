@@ -12,11 +12,19 @@ on:
       - '**.ts'
       - '**.json'
 
-concurrency:
-  group: ${{ github.head_ref }}
-  cancel-in-progress: true
-
 jobs:
+  avoid_redundancy:
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: write
+    timeout-minutes: 2
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
   install-cache:
     runs-on: ubuntu-latest
     steps:
