@@ -1,5 +1,5 @@
 {
-	"name": "cr2s",
+	"name": "@oscarprdev/cloudflare-r2-storage",
 	"version": "1.0.0",
 	"description": "Cloudflare R2 storage",
 	"main": "dist/index.js",
