@@ -1,6 +1,6 @@
 {
 	"name": "@oprdev/cloudflare-r2-storage",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Cloudflare R2 storage",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
