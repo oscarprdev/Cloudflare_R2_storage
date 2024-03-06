@@ -25,7 +25,7 @@ export declare class Bucket extends S3Manager implements CR2S {
      * @param input An object containing the file, ID, content type, and optional project under which to store the file.
      * @returns A promise that resolves to a File object representing the uploaded file, or void in case of error.
      */
-    uploadFile({ file, id, contentType, project }: UploadFileInput): Promise<string | void>;
+    uploadFile({ file, id, contentType, project, }: UploadFileInput): Promise<string | void>;
     /**
      * Deletes an item from the S3 bucket by its key.
      * @param input An object containing the key of the item to delete.

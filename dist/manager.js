@@ -42,7 +42,6 @@ export class S3Manager extends Utilities {
      * @returns The response from the GetObjectCommand, which includes the object's data.
      */
     async getS3Object(key) {
-        console.log(this.BucketName, key);
         return await this.S3.send(new GetObjectCommand({ Bucket: this.BucketName, Key: key }));
     }
     /**
@@ -50,7 +49,8 @@ export class S3Manager extends Utilities {
      * @returns An array of objects contained in the bucket.
      */
     async listObjectsS3() {
-        return (await this.S3.send(new ListObjectsV2Command({ Bucket: this.config.bucketName }))).Contents;
+        return (await this.S3.send(new ListObjectsV2Command({ Bucket: this.config.bucketName })))
+            .Contents;
     }
     /**
      * Deletes an object from the S3 bucket.

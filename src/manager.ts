@@ -41,7 +41,6 @@ export class S3Manager extends Utilities {
 	 * @returns The response from the GetObjectCommand, which includes the object's data.
 	 */
 	protected async getS3Object(key: string) {
-		console.log(this.BucketName, key);
 		return await this.S3.send(new GetObjectCommand({ Bucket: this.BucketName, Key: key }));
 	}
 
@@ -50,7 +49,8 @@ export class S3Manager extends Utilities {
 	 * @returns An array of objects contained in the bucket.
 	 */
 	protected async listObjectsS3() {
-		return (await this.S3.send(new ListObjectsV2Command({ Bucket: this.config.bucketName }))).Contents;
+		return (await this.S3.send(new ListObjectsV2Command({ Bucket: this.config.bucketName })))
+			.Contents;
 	}
 
 	/**
@@ -59,9 +59,13 @@ export class S3Manager extends Utilities {
 	 * @returns A promise that resolves when the delete operation is complete.
 	 */
 	protected async deleteObjectS3(key: string) {
-		const url = await getSignedUrl(this.S3, new DeleteObjectCommand({ Bucket: this.config.bucketName, Key: key }), {
-			expiresIn: 3600,
-		});
+		const url = await getSignedUrl(
+			this.S3,
+			new DeleteObjectCommand({ Bucket: this.config.bucketName, Key: key }),
+			{
+				expiresIn: 3600,
+			}
+		);
 
 		await fetch(url, {
 			method: 'DELETE',
@@ -82,7 +86,9 @@ export class S3Manager extends Utilities {
 			ContentType: contentType,
 		};
 
-		const multipartUploadResponse = await this.S3.send(new CreateMultipartUploadCommand(createMultipartInput));
+		const multipartUploadResponse = await this.S3.send(
+			new CreateMultipartUploadCommand(createMultipartInput)
+		);
 
 		const uploadPartInput = {
 			...createMultipartInput,

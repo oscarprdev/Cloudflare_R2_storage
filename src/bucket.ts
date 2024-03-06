@@ -25,7 +25,9 @@ export class Bucket extends S3Manager implements CR2S {
 			const S3ObjectsList = await this.listObjectsS3();
 
 			if (S3ObjectsList && Array.isArray(S3ObjectsList)) {
-				return S3ObjectsList.filter(({ Key }) => Key !== undefined).map((item) => item.Key) as string[];
+				return S3ObjectsList.filter(({ Key }) => Key !== undefined).map(
+					item => item.Key
+				) as string[];
 			}
 		} catch (error: unknown) {
 			return this.CR2SError(error, 'listAllItems');
@@ -41,7 +43,7 @@ export class Bucket extends S3Manager implements CR2S {
 		try {
 			const list = await this.listAllItemsKeys();
 
-			return list?.filter((key) => key.match(entity));
+			return list?.filter(key => key.match(entity));
 		} catch (error: unknown) {
 			return this.CR2SError(error, 'getItemsByEntity');
 		}
@@ -52,7 +54,12 @@ export class Bucket extends S3Manager implements CR2S {
 	 * @param input An object containing the file, ID, content type, and optional project under which to store the file.
 	 * @returns A promise that resolves to a File object representing the uploaded file, or void in case of error.
 	 */
-	public async uploadFile({ file, id, contentType, project }: UploadFileInput): Promise<string | void> {
+	public async uploadFile({
+		file,
+		id,
+		contentType,
+		project,
+	}: UploadFileInput): Promise<string | void> {
 		try {
 			const key = `${project ? `${project}/` : ''}${id}`;
 
