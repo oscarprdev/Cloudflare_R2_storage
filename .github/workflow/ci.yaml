@@ -1,6 +1,9 @@
 name: CR2S CI
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
