@@ -1,0 +1,144 @@
+name: CR2S CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.js'
+      - '**.ts'
+      - '**.json'
+
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.17.0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - name: Install Dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          pnpm install
+
+  type-check:
+    runs-on: ubuntu-latest
+    needs: install-cache
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.17.0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Restore pnpm dependencies
+        uses: actions/cache@v4
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - name: Check types
+        run: |
+          pnpm run type-check
+  tests:
+    runs-on: ubuntu-latest
+    needs: [type-check]
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.17.0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Restore pnpm dependencies
+        uses: actions/cache@v4
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - name: Run test
+        run: |
+          pnpm run test
+        env:
+          S3_API_URL: ${{ secrets.S3_API_URL }}
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          BUCKET: ${{ secrets.BUCKET }}
+
+  pre-build:
+    runs-on: ubuntu-latest
+    needs: [tests]
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.17.0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Restore pnpm dependencies
+        uses: actions/cache@v4
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - name: Run pre build
+        run: |
+          pnpm run pre-build
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [pre-build]
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.17.0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Restore pnpm dependencies
+        uses: actions/cache@v4
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - name: Run build
+        run: |
+          pnpm run build

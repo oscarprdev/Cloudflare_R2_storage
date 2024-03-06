@@ -1,0 +1,24 @@
+{
+	"name": "cr2s",
+	"version": "1.0.0",
+	"description": "Cloudflare R2 storage",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"pre-build": "npm run build",
+		"test": "vitest",
+		"type-check": "tsc --noEmit"
+	},
+	"keywords": [],
+	"author": "Oscar Perez Romero - @oscarprdev",
+	"license": "MIT",
+	"devDependencies": {
+		"@aws-sdk/client-s3": "^3.525.0",
+		"@aws-sdk/s3-request-presigner": "^3.525.0",
+		"@types/node": "^20.11.24",
+		"dotenv": "^16.4.5",
+		"typescript": "^5.3.3",
+		"vitest": "^1.3.1"
+	}
+}
