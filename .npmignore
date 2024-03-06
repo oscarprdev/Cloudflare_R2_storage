@@ -1,0 +1,22 @@
+# Source files
+src/
+tests/
+
+# Configuration files
+*.config.js
+*.ts
+tsconfig.json
+
+
+# Development-specific
+node_modules/
+*.log
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+
