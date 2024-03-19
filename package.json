@@ -16,8 +16,6 @@
   "author": "Oscar Perez Romero - @oscarprdev",
   "license": "MIT",
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.525.0",
-    "@aws-sdk/s3-request-presigner": "^3.525.0",
     "@types/node": "^20.11.24",
     "dotenv": "^16.4.5",
     "prettier": "^3.2.5",
@@ -26,5 +24,9 @@
   },
   "files": [
     "dist/"
-  ]
+  ],
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.536.0",
+    "@aws-sdk/s3-request-presigner": "^3.536.0"
+  }
 }
