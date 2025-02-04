@@ -21,22 +21,6 @@ export interface S3Config {
 }
 
 /**
- * Input type for retrieving items from the bucket that match a specified entity.
- */
-export interface GetItemsByEntity {
-	/** The entity name or pattern to match against item names in the bucket. */
-	entity: string;
-}
-
-/**
- * Input type for deleting an item from the bucket by its key.
- */
-export interface DeleteItemByKey {
-	/** The key (path) of the item to be deleted from the bucket. */
-	key: string;
-}
-
-/**
  * Input parameters for uploading a file to the bucket.
  */
 export interface UploadFileInput {

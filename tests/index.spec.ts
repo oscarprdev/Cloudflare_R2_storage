@@ -6,7 +6,7 @@ import fs from 'fs';
 
 dotenv.config();
 
-describe('CR2S', () => {
+describe('S3Bucket', () => {
 	let testBucket: Bucket;
 
 	beforeEach(() => {
@@ -23,11 +23,11 @@ describe('CR2S', () => {
 		});
 	});
 
-	it('Should Bucket variables be setted correctly', () => {
+	it('Should initialize Bucket correctly', () => {
 		expect(testBucket).toBeDefined();
 	});
 
-	it('Should Bucket be able to upload a File', async () => {
+	it('Should upload a file', async () => {
 		const file = Uint8Array.from(fs.readFileSync('tests/mock-data/tiny-image.webp'));
 
 		const uploadFilePayload: UploadFileInput = {
@@ -42,8 +42,10 @@ describe('CR2S', () => {
 		expect(result).toBe('mock-project/mock-id');
 	});
 
-	it('Should Bucket be able to list all items', async () => {
-		const keys = await testBucket.listAllItemsKeys();
+	it('Should list all files', async () => {
+		const keys = await testBucket.listFiles();
+
+		console.log(keys)
 
 		expect(keys).toBeTruthy();
 		expect(keys?.length).toBeGreaterThan(0);
@@ -55,23 +57,26 @@ describe('CR2S', () => {
 		}
 	});
 
-	it('Should Bucket be able to list all items in a project', async () => {
-		const keys = await testBucket.getKeysByEntity({ entity: 'mock-project' });
+	it('Should list files in a project', async () => {
+		const keys = await testBucket.listFiles();
+		const projectKeys = keys?.filter(key => key.startsWith('mock-project'));
 
-		expect(keys).toBeTruthy();
-		expect(keys?.length).toBeGreaterThan(0);
+		expect(projectKeys).toBeTruthy();
+		expect(projectKeys?.length).toBeGreaterThan(0);
 
-		if (keys) {
-			for (const key of keys) {
+		if (projectKeys) {
+			for (const key of projectKeys) {
 				expect(key).toBeTruthy();
 			}
 		}
 	});
 
-	it('Should Bucket be able to delete an item', async () => {
-		await testBucket.deleteItemByKey({ key: 'mock-project/mock-id' });
+	it('Should delete a file', async () => {
+		await testBucket.deleteFile({ id: 'mock-id', project: 'mock-project' });
 
-		const keys = await testBucket.getKeysByEntity({ entity: 'mock-project' });
-		expect(keys).toBeFalsy();
+		const keys = await testBucket.listFiles();
+		const projectKeys = keys?.filter(key => key.startsWith('mock-project'));
+
+		expect(projectKeys?.includes('mock-project/mock-id')).toBeFalsy();
 	});
 });

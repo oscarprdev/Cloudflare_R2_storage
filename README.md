@@ -31,6 +31,7 @@ Second, retrieve the variables to connect the package with Cloudflare storage.
 
 > [!TIP]
 > Key value is created from Project and Id
+> File url: `https://r2-storage.url.com/your-project-name/your-file-id`
 
 ```javascript
 const bucket = new Bucket({
@@ -48,13 +49,18 @@ await bucket.uploadFile({
   project: 'your-project-name',
 });
 
+// Get all files
+await bucket.listFiles();
+
 // Get file by project
-await bucket.getKeysByEntity({
-  entity: 'your-project-name',
+await bucket.getFile({
+  id: 'your-file-id',
+  project: 'your-project-name',
 });
 
 // Delete file
-await bucket.deleteItemByKey({
-  key: 'your-project-name/your-file-id',
+await bucket.deleteFile({
+  id: 'your-file-id',
+  project: 'your-project-name',
 });
 ```
