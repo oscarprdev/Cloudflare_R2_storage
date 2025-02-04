@@ -8,29 +8,28 @@ import {
 	UploadPartCommand,
 	_Object,
 } from '@aws-sdk/client-s3';
-import { Utilities } from './utilities';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { BucketFile, S3Config } from './types';
+import { BucketConfig, BucketFile } from './types';
 
-export class S3Manager extends Utilities {
-	private readonly S3: S3Client;
-	private readonly BucketName: string;
+/**
+ * Manages interactions with an S3 bucket.
+ */
+export class S3Manager {
+	protected readonly S3: S3Client;
+	private readonly bucketName: string;
 
-	/**
-	 * Initializes a new instance of the S3Manager with specific S3 configuration.
-	 * @param config Configuration for S3 client, including bucket name and credentials.
-	 */
-	constructor(protected readonly config: S3Config) {
-		super(config.bucketName);
+	constructor(protected readonly config: BucketConfig) {
+		if (config.useDucket) {
+			throw new Error('S3Manager can only be used with the S3Config');
+		}
 
-		this.BucketName = this.config.bucketName;
-
+		this.bucketName = config.bucketName;
 		this.S3 = new S3Client({
 			region: 'auto',
-			endpoint: this.config.endpoint,
+			endpoint: config.apiUrl,
 			credentials: {
-				accessKeyId: this.config.accessKeyId,
-				secretAccessKey: this.config.secretAccessKey,
+				accessKeyId: config.accessId,
+				secretAccessKey: config.secret,
 			},
 		});
 	}
@@ -41,7 +40,7 @@ export class S3Manager extends Utilities {
 	 * @returns The response from the GetObjectCommand, which includes the object's data.
 	 */
 	protected async getS3Object(key: string) {
-		return await this.S3.send(new GetObjectCommand({ Bucket: this.BucketName, Key: key }));
+		return await this.S3.send(new GetObjectCommand({ Bucket: this.bucketName, Key: key }));
 	}
 
 	/**
@@ -49,8 +48,7 @@ export class S3Manager extends Utilities {
 	 * @returns An array of objects contained in the bucket.
 	 */
 	protected async listObjectsS3() {
-		return (await this.S3.send(new ListObjectsV2Command({ Bucket: this.config.bucketName })))
-			.Contents;
+		return (await this.S3.send(new ListObjectsV2Command({ Bucket: this.bucketName }))).Contents;
 	}
 
 	/**
@@ -61,7 +59,7 @@ export class S3Manager extends Utilities {
 	protected async deleteObjectS3(key: string) {
 		const url = await getSignedUrl(
 			this.S3,
-			new DeleteObjectCommand({ Bucket: this.config.bucketName, Key: key }),
+			new DeleteObjectCommand({ Bucket: this.bucketName, Key: key }),
 			{
 				expiresIn: 3600,
 			}
@@ -81,7 +79,7 @@ export class S3Manager extends Utilities {
 	 */
 	protected async uploadObjectS3(file: BucketFile, key: string, contentType: string) {
 		const createMultipartInput = {
-			Bucket: this.config.bucketName,
+			Bucket: this.bucketName,
 			Key: key,
 			ContentType: contentType,
 		};
@@ -112,5 +110,24 @@ export class S3Manager extends Utilities {
 		};
 
 		await this.S3.send(new CompleteMultipartUploadCommand(completeParams));
+	}
+
+	/**
+	 * Custom error handler for creating a structured error message.
+	 * @param error The error object or any thrown value.
+	 * @param action A string describing the action during which the error occurred.
+	 * @throws Throws a new error with a structured message containing the bucket name, action, error message, and timestamp.
+	 */
+	protected CR2SError(error: Error | unknown, action: string) {
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+		throw new Error(
+			JSON.stringify({
+				bucket: this.bucketName,
+				action,
+				message: errorMessage,
+				at: new Date().getUTCDate(),
+			})
+		);
 	}
 }

@@ -1,66 +1,87 @@
-# Cloudflare R2 storage
+# Ducket
 
-A simple way to manage files using Cloudflare R2 storage
+`Ducket` is a simple and efficient library to manage your files using Cloudflare R2 Storage.
 
 ## Features
 
 - Upload files
+- Get file
 - List files
 - Delete files
 
-## Documentation
+## Installation
 
-First, start installing the package in your project:
+To install the package in your project, run the following command:
 
-```javascript
-npm i @oprdev/cloudflare-r2-storage
+```bash
+npm install ducket
 ```
 
-Second, retrieve the variables to connect the package with Cloudflare storage.
+## Setup
 
-> [!IMPORTANT]
-> To start using the package you will need from Cloudflare the following variables:
->
-> - Cloudflare_access_key_ID
-> - Cloudflare_access_key
-> - Bucket name
->
-> Please check it out the [Cloudflare Documentation](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)
+Before using the package, you'll need the following Cloudflare credentials:
 
-## How it works
+- **Cloudflare Access Key ID**
+- **Cloudflare Secret Access Key**
+- **Bucket Name**
 
-> [!TIP]
-> Key value is created from Project and Id
-> File url: `https://r2-storage.url.com/your-project-name/your-file-id`
+Please ensure you have these variables from your Cloudflare account. If you're unsure how to get them, refer to the [Cloudflare Documentation](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+
+## Usage
+
+Once the package is installed and your credentials are ready, you can start using it to interact with your Cloudflare R2 storage. Here's how to use the various features:
+
+### Example
+
+#### Initialize the Bucket
 
 ```javascript
+import { Bucket } from 'ducket';
+
 const bucket = new Bucket({
   endpoint,
   accessKeyId,
   secretAccessKey,
   bucketName,
 });
+```
 
-// Upload file
+#### Upload a File
+
+```javascript
 await bucket.uploadFile({
   file,
-  id: 'your-file-id',
-  contentType: 'image/webp',
-  project: 'your-project-name',
-});
-
-// Get all files
-await bucket.listFiles();
-
-// Get file by project
-await bucket.getFile({
-  id: 'your-file-id',
-  project: 'your-project-name',
-});
-
-// Delete file
-await bucket.deleteFile({
-  id: 'your-file-id',
-  project: 'your-project-name',
+  id: 'your-file-id', // Unique file ID
+  contentType: 'image/webp', // Content type of the file
+  project: 'your-project-name', // Project name for file organization
 });
 ```
+
+#### List All Files
+
+```javascript
+const files = await bucket.listFiles();
+```
+
+#### Retrieve a File by Project
+
+```javascript
+const file = await bucket.getFile({
+  id: 'your-file-id', // File ID
+  project: 'your-project-name', // Project name
+});
+```
+
+#### Delete a File
+
+```javascript
+await bucket.deleteFile({
+  id: 'your-file-id', // File ID
+  project: 'your-project-name', // Project name
+});
+```
+
+## Notes
+
+> **Tip:** The file URL is constructed using your project name and file ID:  
+> `https://r2-storage.url.com/your-project-name/your-file-id`

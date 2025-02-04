@@ -1,30 +1,30 @@
 import { expect, describe, it, beforeEach } from 'vitest';
 import dotenv from 'dotenv';
 import { Bucket } from '../src';
-import { UploadFileInput } from '../src/types';
+import { S3Config, UploadFileInput } from '../src/types';
 import fs from 'fs';
 
 dotenv.config();
 
-describe('S3Bucket', () => {
-	let testBucket: Bucket;
+describe('DucketStorage', () => {
+	let testDucket: Bucket;
 
 	beforeEach(() => {
-		const endpoint = process.env.S3_API_URL || '';
-		const accessKeyId = process.env.S3_ACCESS_KEY_ID || '';
-		const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY || '';
-		const bucketName = process.env.BUCKET || '';
+		const apiUrl = process.env.S3_API_URL || '';
+		const accessId = process.env.S3_ACCESS_KEY_ID || '';
+		const secret = process.env.S3_SECRET_ACCESS_KEY || '';
+		const bucketName = process.env.DUCKET || '';
 
-		testBucket = new Bucket({
-			endpoint,
-			accessKeyId,
-			secretAccessKey,
+		testDucket = new Bucket({
+			apiUrl,
+			accessId,
+			secret,
 			bucketName,
 		});
 	});
 
-	it('Should initialize Bucket correctly', () => {
-		expect(testBucket).toBeDefined();
+	it('Should initialize Ducket correctly', () => {
+		expect(testDucket).toBeDefined();
 	});
 
 	it('Should upload a file', async () => {
@@ -33,19 +33,17 @@ describe('S3Bucket', () => {
 		const uploadFilePayload: UploadFileInput = {
 			file,
 			id: 'mock-id',
-			contentType: 'image/webp',
+			type: 'image/webp',
 			project: 'mock-project',
 		};
 
-		const result = await testBucket.uploadFile(uploadFilePayload);
+		const result = await testDucket.uploadFile(uploadFilePayload);
 
 		expect(result).toBe('mock-project/mock-id');
 	});
 
 	it('Should list all files', async () => {
-		const keys = await testBucket.listFiles();
-
-		console.log(keys)
+		const keys = await testDucket.listFiles();
 
 		expect(keys).toBeTruthy();
 		expect(keys?.length).toBeGreaterThan(0);
@@ -58,7 +56,7 @@ describe('S3Bucket', () => {
 	});
 
 	it('Should list files in a project', async () => {
-		const keys = await testBucket.listFiles();
+		const keys = await testDucket.listFiles();
 		const projectKeys = keys?.filter(key => key.startsWith('mock-project'));
 
 		expect(projectKeys).toBeTruthy();
@@ -72,9 +70,9 @@ describe('S3Bucket', () => {
 	});
 
 	it('Should delete a file', async () => {
-		await testBucket.deleteFile({ id: 'mock-id', project: 'mock-project' });
+		await testDucket.deleteFile({ id: 'mock-id', project: 'mock-project' });
 
-		const keys = await testBucket.listFiles();
+		const keys = await testDucket.listFiles();
 		const projectKeys = keys?.filter(key => key.startsWith('mock-project'));
 
 		expect(projectKeys?.includes('mock-project/mock-id')).toBeFalsy();
