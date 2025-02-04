@@ -23,6 +23,7 @@ Before using the package, you'll need the following Cloudflare credentials:
 
 - **Cloudflare Access Key ID**
 - **Cloudflare Secret Access Key**
+- **Cloudflare Api Url**
 - **Bucket Name**
 
 Please ensure you have these variables from your Cloudflare account. If you're unsure how to get them, refer to the [Cloudflare Documentation](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
@@ -36,13 +37,13 @@ Once the package is installed and your credentials are ready, you can start usin
 #### Initialize the Bucket
 
 ```javascript
-import { Bucket } from 'ducket';
+import { Bucket } from '@bucket';
 
 const bucket = new Bucket({
-  endpoint,
-  accessKeyId,
-  secretAccessKey,
-  bucketName,
+			apiUrl,
+			accessId,
+			secret,
+			bucketName,
 });
 ```
 
@@ -50,9 +51,9 @@ const bucket = new Bucket({
 
 ```javascript
 await bucket.uploadFile({
-  file,
+  file, // File content
   id: 'your-file-id', // Unique file ID
-  contentType: 'image/webp', // Content type of the file
+  type: 'image/webp', // Content type of the file
   project: 'your-project-name', // Project name for file organization
 });
 ```
