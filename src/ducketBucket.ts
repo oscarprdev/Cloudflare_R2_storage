@@ -2,7 +2,7 @@ import { Readable } from "stream";
 import { DucketConfig, S3Bucket, UploadFileInput } from "./types";
 
 export class DucketBucket implements S3Bucket {
-	private apiEndpoint = 'https://your-internal-api.com';
+	private apiEndpoint = 'https://ducket.vercel.app/';
 
 	constructor(protected readonly config: DucketConfig) {}
 
@@ -42,7 +42,7 @@ export class DucketBucket implements S3Bucket {
 	public async uploadFile({ file, id, type, project }: UploadFileInput): Promise<string | void> {
 		try {
 			const formData = new FormData();
-            
+
 			if (typeof file === 'string') {
                 formData.append('file', new Blob([file], { type }));
             } else if (file instanceof Uint8Array || file instanceof Buffer) {
