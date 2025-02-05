@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 import { DucketConfig, S3Bucket, UploadFileInput } from './types';
 
 export class DucketBucket implements S3Bucket {
-	private apiEndpoint = 'https://ducket.vercel.app/api/ducket';
+	private apiEndpoint = 'https://www.ducket.dev/api/ducket';
 
 	constructor(protected readonly config: DucketConfig) {}
 
@@ -31,6 +31,7 @@ export class DucketBucket implements S3Bucket {
 				method: 'GET',
 				headers: { Authorization: `Bearer ${this.config.apiKey}` },
 			});
+
 			if (!response.ok) {
 				throw new Error('Failed to fetch file');
 			}

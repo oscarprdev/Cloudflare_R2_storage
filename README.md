@@ -121,7 +121,6 @@ await bucket.uploadFile({
   file, // File content
   id: 'your-file-id', // Unique file ID
   type: 'image/webp', // Content type of the file
-  project: 'your-project-name', // Project name for file organization
 });
 ```
 

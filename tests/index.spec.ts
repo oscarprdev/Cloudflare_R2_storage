@@ -93,7 +93,6 @@ describe('DucketStorage', () => {
 				file,
 				id: 'mock-id',
 				type: 'image/webp',
-				project: 'test',
 			};
 
 			const result = await testDucket.uploadFile(uploadFilePayload);
