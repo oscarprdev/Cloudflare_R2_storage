@@ -8,7 +8,7 @@ export class DucketBucket implements S3Bucket {
 
 	public async listFiles(): Promise<string[] | void> {
 		try {
-			const response = await fetch(`${this.apiEndpoint}/files`, {
+			const response = await fetch(`${this.apiEndpoint}/api/ducket/files`, {
 				method: 'GET',
 				headers: { 'Authorization': `Bearer ${this.config.apiKey}`, 'Content-Type': 'application/json' },
 			});
@@ -21,11 +21,10 @@ export class DucketBucket implements S3Bucket {
 			console.error('Error in listFiles:', error);
 		}
 	}
-
-	public async getFile({ id, project }: { id: string; project?: string }): Promise<string | void> {
+ 
+	public async getFile({ id }: { id: string }): Promise<string | void> {
 		try {
-            const key = project ? `${project}/${id}` : id;
-			const response = await fetch(`${this.apiEndpoint}/file/${key}`, {
+			const response = await fetch(`${this.apiEndpoint}/api/ducket/file/${id}`, {
 				method: 'GET',
 				headers: { 'Authorization': `Bearer ${this.config.apiKey}` },
 			});
@@ -57,7 +56,7 @@ export class DucketBucket implements S3Bucket {
 			formData.append('type', type);
 			if (project) formData.append('project', project);
 
-			const response = await fetch(`${this.apiEndpoint}/upload`, {
+			const response = await fetch(`${this.apiEndpoint}/api/ducket/file`, {
 				method: 'POST',
 				headers: { 'Authorization': `Bearer ${this.config.apiKey}` },
 				body: formData,
@@ -72,10 +71,9 @@ export class DucketBucket implements S3Bucket {
 		}
 	}
 
-	public async deleteFile({ id, project }: { id: string; project?: string }): Promise<void> {
+	public async deleteFile({ id }: { id: string }): Promise<void> {
 		try {
-            const key = project ? `${project}/${id}` : id;
-			const response = await fetch(`${this.apiEndpoint}/delete/${key}`, {
+			const response = await fetch(`${this.apiEndpoint}/api/ducket/file/${id}`, {
 				method: 'DELETE',
 				headers: { 'Authorization': `Bearer ${this.config.apiKey}` },
 			});
