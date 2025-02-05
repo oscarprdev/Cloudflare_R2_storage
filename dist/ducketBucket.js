@@ -1,4 +1,4 @@
-import { Readable } from "stream";
+import { Readable } from 'stream';
 export class DucketBucket {
     constructor(config) {
         Object.defineProperty(this, "config", {
@@ -11,14 +11,17 @@ export class DucketBucket {
             enumerable: true,
             configurable: true,
             writable: true,
-            value: 'https://ducket.vercel.app/'
+            value: 'https://ducket.vercel.app/api/ducket'
         });
     }
     async listFiles() {
         try {
-            const response = await fetch(`${this.apiEndpoint}/api/ducket/files`, {
+            const response = await fetch(`${this.apiEndpoint}/files`, {
                 method: 'GET',
-                headers: { 'Authorization': `Bearer ${this.config.apiKey}`, 'Content-Type': 'application/json' },
+                headers: {
+                    Authorization: `Bearer ${this.config.apiKey}`,
+                    'Content-Type': 'application/json',
+                },
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch files');
@@ -32,9 +35,9 @@ export class DucketBucket {
     }
     async getFile({ id }) {
         try {
-            const response = await fetch(`${this.apiEndpoint}/api/ducket/file/${id}`, {
+            const response = await fetch(`${this.apiEndpoint}/file/${id}`, {
                 method: 'GET',
-                headers: { 'Authorization': `Bearer ${this.config.apiKey}` },
+                headers: { Authorization: `Bearer ${this.config.apiKey}` },
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch file');
@@ -65,9 +68,9 @@ export class DucketBucket {
             formData.append('type', type);
             if (project)
                 formData.append('project', project);
-            const response = await fetch(`${this.apiEndpoint}/api/ducket/file`, {
+            const response = await fetch(`${this.apiEndpoint}/file`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${this.config.apiKey}` },
+                headers: { Authorization: `Bearer ${this.config.apiKey}` },
                 body: formData,
             });
             if (!response.ok) {
@@ -82,9 +85,9 @@ export class DucketBucket {
     }
     async deleteFile({ id }) {
         try {
-            const response = await fetch(`${this.apiEndpoint}/api/ducket/file/${id}`, {
+            const response = await fetch(`${this.apiEndpoint}/file/${id}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${this.config.apiKey}` },
+                headers: { Authorization: `Bearer ${this.config.apiKey}` },
             });
             if (!response.ok) {
                 throw new Error('Failed to delete file');

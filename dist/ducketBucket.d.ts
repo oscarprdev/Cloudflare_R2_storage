@@ -1,4 +1,4 @@
-import { DucketConfig, S3Bucket, UploadFileInput } from "./types";
+import { DucketConfig, S3Bucket, UploadFileInput } from './types';
 export declare class DucketBucket implements S3Bucket {
     protected readonly config: DucketConfig;
     private apiEndpoint;
