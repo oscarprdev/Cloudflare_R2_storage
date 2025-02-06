@@ -25,9 +25,9 @@ export class DucketBucket implements S3Bucket {
 		}
 	}
 
-	public async getFile({ id }: { id: string }): Promise<string | void> {
+	public async getFile({ name }: { name: string }): Promise<string | void> {
 		try {
-			const response = await fetch(`${this.apiEndpoint}/file/${id}`, {
+			const response = await fetch(`${this.apiEndpoint}/file/${name}`, {
 				method: 'GET',
 				headers: { Authorization: `Bearer ${this.config.apiKey}` },
 			});
@@ -42,7 +42,7 @@ export class DucketBucket implements S3Bucket {
 		}
 	}
 
-	public async uploadFile({ file, id, type, project }: UploadFileInput): Promise<string | void> {
+	public async uploadFile({ file, name, type, project }: UploadFileInput): Promise<string | void> {
 		try {
 			const formData = new FormData();
 
@@ -56,7 +56,7 @@ export class DucketBucket implements S3Bucket {
 				throw new Error('Unsupported file type');
 			}
 
-			formData.append('id', id);
+			formData.append('name', name);
 			formData.append('type', type);
 			if (project) formData.append('project', project);
 
@@ -75,9 +75,9 @@ export class DucketBucket implements S3Bucket {
 		}
 	}
 
-	public async deleteFile({ id }: { id: string }): Promise<void> {
+	public async deleteFile({ name }: { name: string }): Promise<void> {
 		try {
-			const response = await fetch(`${this.apiEndpoint}/file/${id}`, {
+			const response = await fetch(`${this.apiEndpoint}/file/${name}`, {
 				method: 'DELETE',
 				headers: { Authorization: `Bearer ${this.config.apiKey}` },
 			});

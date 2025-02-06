@@ -21,7 +21,7 @@ export class Bucket implements S3Bucket {
 		return this.bucket.listFiles();
 	}
 
-	public getFile(input: { id: string; project?: string }): Promise<string | void> {
+	public getFile(input: { name: string; project?: string }): Promise<string | void> {
 		return this.bucket.getFile(input);
 	}
 
@@ -29,7 +29,7 @@ export class Bucket implements S3Bucket {
 		return this.bucket.uploadFile(input);
 	}
 
-	public deleteFile(input: { id: string; project?: string }): Promise<void> {
+	public deleteFile(input: { name: string; project?: string }): Promise<void> {
 		return this.bucket.deleteFile(input);
 	}
 }

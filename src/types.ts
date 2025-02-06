@@ -12,8 +12,8 @@ export type BucketFile = string | Uint8Array | Buffer | Readable;
 export interface UploadFileInput {
 	/** The content of the file to be uploaded. */
 	file: BucketFile;
-	/** The ID or name to assign to the file in the bucket. Used as part of the file's key. */
-	id: string;
+	/** The file name to assign to the file in the bucket. Used as part of the file's key. */
+	name: string;
 	/** The MIME type of the file being uploaded. */
 	type: string;
 	/** Optional. The name of the project or folder within the bucket to which the file belongs. */
@@ -40,7 +40,7 @@ export type BucketConfig = S3Config | DucketConfig;
 
 export interface S3Bucket {
 	listFiles(): Promise<string[] | void>;
-	getFile(input: { id: string; project?: string }): Promise<string | void>;
+	getFile(input: { name: string; project?: string }): Promise<string | void>;
 	uploadFile(input: UploadFileInput): Promise<string | void>;
-	deleteFile(input: { id: string; project?: string }): Promise<void>;
+	deleteFile(input: { name: string; project?: string }): Promise<void>;
 }

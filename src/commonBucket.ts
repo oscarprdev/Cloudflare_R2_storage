@@ -15,9 +15,9 @@ export class CommonBucket extends S3Manager implements S3Bucket {
 		}
 	}
 
-	public async getFile({ id, project }: { id: string; project?: string }): Promise<string | void> {
+	public async getFile({ name, project }: { name: string; project?: string }): Promise<string | void> {
 		try {
-			const key = project ? `${project}/${id}` : id;
+			const key = project ? `${project}/${name}` : name;
 			await this.getS3Object(key);
 			return key;
 		} catch (error) {
@@ -25,9 +25,9 @@ export class CommonBucket extends S3Manager implements S3Bucket {
 		}
 	}
 
-	public async uploadFile({ file, id, type, project }: UploadFileInput): Promise<string | void> {
+	public async uploadFile({ file, name, type, project }: UploadFileInput): Promise<string | void> {
 		try {
-			const key = project ? `${project}/${id}` : id;
+			const key = project ? `${project}/${name}` : name;
 			await this.uploadObjectS3(file, key, type);
 			return key;
 		} catch (error) {
@@ -35,9 +35,9 @@ export class CommonBucket extends S3Manager implements S3Bucket {
 		}
 	}
 
-	public async deleteFile({ id, project }: { id: string; project?: string }): Promise<void> {
+	public async deleteFile({ name, project }: { name: string; project?: string }): Promise<void> {
 		try {
-			const key = project ? `${project}/${id}` : id;
+			const key = project ? `${project}/${name}` : name;
 			await this.deleteObjectS3(key);
 		} catch (error) {
 			console.error('Error in deleteFile:', error);

@@ -33,19 +33,19 @@ describe('DucketStorage', () => {
 
 			const uploadFilePayload: UploadFileInput = {
 				file,
-				id: 'mock-id',
+				name: 'mock-name',
 				type: 'image/webp',
 				project: 'test',
 			};
 
 			const result = await testDucket.uploadFile(uploadFilePayload);
 
-			expect(result).toBe('test/mock-id');
+			expect(result).toBe('test/mock-name');
 		});
 
 		it('Should get a file', async () => {
-			const response = await testDucket.getFile({ id: 'mock-id', project: 'test' });
-			expect(response).toBe('test/mock-id');
+			const response = await testDucket.getFile({ name: 'mock-name', project: 'test' });
+			expect(response).toBe('test/mock-name');
 		});
 
 		it('Should list all files', async () => {
@@ -57,13 +57,13 @@ describe('DucketStorage', () => {
 			if (keys) {
 				for (const key of keys) {
 					expect(key).toBeTruthy();
-					expect(key).toBe('test/mock-id');
+					expect(key).toBe('test/mock-name');
 				}
 			}
 		});
 
 		it('Should delete a file', async () => {
-			await testDucket.deleteFile({ id: 'mock-id', project: 'test' });
+			await testDucket.deleteFile({ name: 'mock-name', project: 'test' });
 			const keys = await testDucket.listFiles();
 			expect(keys).toBeUndefined();
 		});
@@ -91,18 +91,18 @@ describe('DucketStorage', () => {
 
 			const uploadFilePayload: UploadFileInput = {
 				file,
-				id: 'mock-id',
+				name: 'mock-name',
 				type: 'image/webp',
 			};
 
 			const result = await testDucket.uploadFile(uploadFilePayload);
 
-			expect(result).toBe(`${publicURL}/test/mock-id`);
+			expect(result).toBe(`${publicURL}/test/mock-name`);
 		});
 
 		it('Should get a file', async () => {
-			const response = await testDucket.getFile({ id: 'mock-id' });
-			expect(response).toBe(`${publicURL}/test/mock-id`);
+			const response = await testDucket.getFile({ name: 'mock-name' });
+			expect(response).toBe(`${publicURL}/test/mock-name`);
 		});
 
 		it('Should list all files', async () => {
@@ -114,13 +114,13 @@ describe('DucketStorage', () => {
 			if (keys) {
 				for (const key of keys) {
 					expect(key).toBeTruthy();
-					expect(key).toBe(`${publicURL}/test/mock-id`);
+					expect(key).toBe(`${publicURL}/test/mock-name`);
 				}
 			}
 		});
 
 		it('Should delete a file', async () => {
-			await testDucket.deleteFile({ id: 'mock-id' });
+			await testDucket.deleteFile({ name: 'mock-name' });
 			const keys = await testDucket.listFiles();
 			expect(keys?.length).toBe(0);
 		});

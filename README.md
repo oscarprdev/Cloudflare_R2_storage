@@ -56,7 +56,7 @@ const bucket = new Bucket({
 ```javascript
 await bucket.uploadFile({
   file, // File content
-  id: 'your-file-id', // Unique file ID
+  name: 'your-file-name', // Unique file name
   type: 'image/webp', // Content type of the file
   project: 'your-project-name', // Project name for file organization
 });
@@ -72,7 +72,7 @@ const files = await bucket.listFiles();
 
 ```javascript
 const file = await bucket.getFile({
-  id: 'your-file-id', // File ID
+  name: 'your-file-name', // File name
   project: 'your-project-name', // Project name
 });
 ```
@@ -119,7 +119,7 @@ const bucket = new Bucket({
 ```javascript
 await bucket.uploadFile({
   file, // File content
-  id: 'your-file-id', // Unique file ID
+  name: 'your-file-name', // Unique file name
   type: 'image/webp', // Content type of the file
 });
 ```
@@ -134,7 +134,7 @@ const files = await bucket.listFiles();
 
 ```javascript
 const file = await bucket.getFile({
-  id: 'your-file-id', // File ID
+  name: 'your-file-name', // File name
 });
 ```
 
@@ -142,13 +142,13 @@ const file = await bucket.getFile({
 
 ```javascript
 await bucket.deleteFile({
-  id: 'your-file-id', // File ID
+  name: 'your-file-name', // File name
 });
 ```
 
 ## Notes
 
-> **Tip:** The file URL is constructed using your project name and file ID:  
-> `https://ducket.vercel.app/your-project-name/your-file-id`
+> **Tip:** The file URL is constructed using your project name and file name:  
+> `https://ducket.vercel.app/your-project-name/your-file-name`
 
 
